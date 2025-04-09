@@ -1,0 +1,245 @@
+{
+    "info": {
+      "_postman_id": "a1b2c3d4-e5f6-7890",
+      "name": "User and Delivery Services API (Docker)",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "description": "Postman collection for Dockerized services (User:8001, Delivery:8002)"
+    },
+    "item": [
+      {
+        "name": "Authentication",
+        "item": [
+          {
+            "name": "Get Token (User Service)",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/x-www-form-urlencoded"
+                }
+              ],
+              "body": {
+                "mode": "urlencoded",
+                "urlencoded": [
+                  {
+                    "key": "username",
+                    "value": "admin",
+                    "type": "text"
+                  },
+                  {
+                    "key": "password",
+                    "value": "secret",
+                    "type": "text"
+                  }
+                ]
+              },
+              "url": {
+                "raw": "{{user_service_url}}/token",
+                "host": ["{{user_service_url}}"],
+                "path": ["token"]
+              }
+            },
+            "response": []
+          }
+        ]
+      },
+      {
+        "name": "User Service (8001)",
+        "item": [
+          {
+            "name": "Create User",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"id\": 1001,\n    \"login\": \"user1\",\n    \"name\": \"John\",\n    \"surname\": \"Doe\",\n    \"email\": \"john@example.com\",\n    \"hashed_password\": \"password123\",\n    \"age\": 30\n}",
+                "language": "json"
+              },
+              "url": {
+                "raw": "{{user_service_url}}/users",
+                "host": ["{{user_service_url}}"],
+                "path": ["users"]
+              }
+            }
+          },
+          {
+            "name": "Find User by Login",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{user_service_url}}/users/admin",
+                "host": ["{{user_service_url}}"],
+                "path": ["users", "admin"]
+              }
+            }
+          },
+          {
+            "name": "Find User by Full Name",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{user_service_url}}/users/John/Doe",
+                "host": ["{{user_service_url}}"],
+                "path": ["users", "John", "Doe"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Delivery Service (8002)",
+        "item": [
+          {
+            "name": "Create Package",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"id\": 1,\n    \"sender_id\": 1,\n    \"dimensions\": 10.5,\n    \"weight\": 2.3\n}",
+                "language": "json"
+              },
+              "url": {
+                "raw": "{{delivery_service_url}}/packages",
+                "host": ["{{delivery_service_url}}"],
+                "path": ["packages"]
+              }
+            }
+          },
+          {
+            "name": "Get Packages by User ID",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{delivery_service_url}}/packages/1",
+                "host": ["{{delivery_service_url}}"],
+                "path": ["packages", "1"]
+              }
+            }
+          },
+          {
+            "name": "Create Delivery",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"id\": 1,\n    \"package_id\": 1,\n    \"receiver_id\": 2,\n    \"sender_id\": 1,\n    \"address\": \"123 Main St\",\n    \"deliveryman_id\": 3,\n    \"status\": \"pending\"\n}",
+                "language": "json"
+              },
+              "url": {
+                "raw": "{{delivery_service_url}}/delivery",
+                "host": ["{{delivery_service_url}}"],
+                "path": ["delivery"]
+              }
+            }
+          },
+          {
+            "name": "Get Deliveries by User",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{delivery_service_url}}/delivery/sender/1",
+                "host": ["{{delivery_service_url}}"],
+                "path": ["delivery", "sender", "1"]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "variable": [
+      {
+        "key": "access_token",
+        "value": ""
+      },
+      {
+        "key": "user_service_url",
+        "value": "http://localhost:8001"
+      },
+      {
+        "key": "delivery_service_url",
+        "value": "http://localhost:8002"
+      }
+    ],
+    "event": [
+      {
+        "listen": "test",
+        "script": {
+          "exec": [
+            "if (pm.response.code === 200 && pm.request.url.path.includes('token')) {",
+            "    var jsonData = pm.response.json();",
+            "    pm.collectionVariables.set('access_token', jsonData.access_token);",
+            "    pm.test(\"Token received\", function() {",
+            "        pm.expect(jsonData.access_token).to.not.be.empty;",
+            "    });",
+            "}"
+          ],
+          "type": "text/javascript"
+        }
+      }
+    ],
+    "auth": {
+      "type": "bearer",
+      "bearer": [
+        {
+          "key": "token",
+          "value": "{{access_token}}",
+          "type": "string"
+        }
+      ]
+    }
+  }
