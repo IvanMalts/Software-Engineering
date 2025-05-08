@@ -10,3 +10,4 @@ request = function()
     local path = "/users/" .. logins[id]
     local header = {["Authorization"] = "Bearer ..."} -- place token here 
     return wrk.format("GET", path)
+end
